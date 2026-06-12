@@ -24,26 +24,22 @@ jobs:
 
       - run: flutter pub get
 
-      # 创建空 libs 目录（media3 扩展库不是必需的，只是增强解码能力）
       - name: Ensure libs directory
         run: mkdir -p android/app/libs
 
-      - name: Build APK (debug 模式，无需签名)
+      - name: Build APK (debug, no signing needed)
         run: |
-          flutter build apk --debug --target-platform android-arm64
+          flutter build apk --debug 2>&1
 
-      - name: List outputs
+      - name: List APK outputs
         run: |
-          ls -lh build/app/outputs/flutter-apk/
-          find build/app/outputs/flutter-apk/ -name "*.apk"
-
-      - name: Rename APK
-        run: |
-          find build/app/outputs/flutter-apk/ -name "*-debug.apk" -exec sh -c 'cp "$1" "build/app/outputs/flutter-apk/Ghosten-Player-夸克网盘-修改版.apk"' _ {} \;
+          echo "=== Looking for APKs ==="
+          find build/ -name "*.apk" 2>/dev/null
+          ls -lhR build/app/outputs/ 2>/dev/null || echo "No outputs dir"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Ghosten-Player-夸克网盘-修改版
-          path: build/app/outputs/flutter-apk/Ghosten-Player-夸克网盘-修改版.apk
+          path: build/app/outputs/flutter-apk/*.apk
           retention-days: 7
