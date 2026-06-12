@@ -22,6 +22,8 @@ class AccountLoginPage extends StatefulWidget {
 class _AccountLoginPageState extends State<AccountLoginPage> {
   late final FormGroupController _alipan;
   late final FormGroupController _webdav;
+  final _quarkCookieController = TextEditingController();
+  bool _useQuarkCookieLogin = false;
 
   DriverType _driverType = DriverType.alipan;
 
@@ -81,6 +83,7 @@ class _AccountLoginPageState extends State<AccountLoginPage> {
   void dispose() {
     _alipan.dispose();
     _webdav.dispose();
+    _quarkCookieController.dispose();
     super.dispose();
   }
 
@@ -123,14 +126,51 @@ class _AccountLoginPageState extends State<AccountLoginPage> {
           if (_driverType == DriverType.alipan) Expanded(child: FormGroup(controller: _alipan)),
           if (_driverType == DriverType.quark)
             Expanded(
-              child: WebViewWidget(
-                controller:
-                    WebViewController()
-                      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-                      ..setUserAgent(ua)
-                      ..scrollBy(10000, 0)
-                      ..loadRequest(Uri.parse('https://pan.quark.cn')),
-              ),
+              child: _useQuarkCookieLogin
+                  ? Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextField(
+                            controller: _quarkCookieController,
+                            maxLines: 8,
+                            decoration: InputDecoration(
+                              border: const OutlineInputBorder(),
+                              labelText: 'Cookie',
+                              hintText: '从浏览器复制 cookies 粘贴到这里',
+                              helperText: '打开 pan.quark.cn → F12 → Application → Cookies → 复制所有 cookie',
+                              helperMaxLines: 3,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          FilledButton(
+                            onPressed: () => setState(() => _useQuarkCookieLogin = false),
+                            child: const Text('扫码登录'),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Stack(
+                      children: [
+                        WebViewWidget(
+                          controller:
+                              WebViewController()
+                                ..setJavaScriptMode(JavaScriptMode.unrestricted)
+                                ..setUserAgent(ua)
+                                ..scrollBy(10000, 0)
+                                ..loadRequest(Uri.parse('https://pan.quark.cn')),
+                        ),
+                        Positioned(
+                          left: 8,
+                          bottom: 8,
+                          child: FilledButton.tonal(
+                            onPressed: () => setState(() => _useQuarkCookieLogin = true),
+                            child: const Text('Cookie 登录'),
+                          ),
+                        ),
+                      ],
+                    ),
             ),
           if (_driverType == DriverType.webdav) Expanded(child: FormGroup(controller: _webdav)),
         ],
@@ -148,7 +188,9 @@ class _AccountLoginPageState extends State<AccountLoginPage> {
       final data = switch (_driverType) {
         DriverType.alipan => _alipan.data,
         DriverType.webdav => _webdav.data,
-        DriverType.quark => await _quarkCookie(),
+        DriverType.quark => _useQuarkCookieLogin
+            ? {'token': _quarkCookieController.text.trim()}
+            : await _quarkCookie(),
         _ => throw UnimplementedError(),
       };
       if (!mounted) return;

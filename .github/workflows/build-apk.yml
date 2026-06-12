@@ -1,0 +1,49 @@
+name: Build Modified APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - build-apk
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.32.8'
+
+      - run: flutter pub get
+
+      # 创建空 libs 目录（media3 扩展库不是必需的，只是增强解码能力）
+      - name: Ensure libs directory
+        run: mkdir -p android/app/libs
+
+      - name: Build APK (debug 模式，无需签名)
+        run: |
+          flutter build apk --debug --target-platform android-arm64
+
+      - name: List outputs
+        run: |
+          ls -lh build/app/outputs/flutter-apk/
+          find build/app/outputs/flutter-apk/ -name "*.apk"
+
+      - name: Rename APK
+        run: |
+          find build/app/outputs/flutter-apk/ -name "*-debug.apk" -exec sh -c 'cp "$1" "build/app/outputs/flutter-apk/Ghosten-Player-夸克网盘-修改版.apk"' _ {} \;
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Ghosten-Player-夸克网盘-修改版
+          path: build/app/outputs/flutter-apk/Ghosten-Player-夸克网盘-修改版.apk
+          retention-days: 7

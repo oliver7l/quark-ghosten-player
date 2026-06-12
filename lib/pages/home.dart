@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../components/logo.dart';
 import '../l10n/app_localizations.dart';
 import 'components/mobile_builder.dart';
+import 'files/files_page.dart';
 import 'media/live_list.dart';
 import 'media/movie_list.dart';
 import 'media/tv_list.dart';
@@ -23,7 +24,8 @@ class _HomeViewState extends State<HomeView> {
     0 => const TVListPage(),
     1 => const MovieListPage(),
     2 => BlocProvider(create: (_) => IptvCubit(), child: const LiveListPage()),
-    3 => const SettingsPage(),
+    3 => const FilesPage(),
+    4 => const SettingsPage(),
     _ => const Placeholder(),
   };
 
@@ -93,6 +95,11 @@ class _HomeViewState extends State<HomeView> {
         AppLocalizations.of(context)!.homeTabLive,
         const Icon(Icons.live_tv_outlined),
         const Icon(Icons.live_tv),
+      ),
+      _TabDestination(
+        AppLocalizations.of(context)!.homeTabBrowser,
+        const Icon(Icons.folder_outlined),
+        const Icon(Icons.folder),
       ),
       _TabDestination(
         AppLocalizations.of(context)!.homeTabSettings,
