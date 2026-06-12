@@ -22,24 +22,29 @@ jobs:
         with:
           flutter-version: '3.32.8'
 
-      - run: flutter pub get
+      - name: Install dependencies
+        run: flutter pub get
 
       - name: Ensure libs directory
         run: mkdir -p android/app/libs
 
-      - name: Build APK (debug, no signing needed)
+      - name: Build APK (debug, mobile)
         run: |
-          flutter build apk --debug 2>&1
+          flutter build apk --debug --flavor=mobile 2>&1
 
       - name: List APK outputs
+        if: success() || failure()
         run: |
-          echo "=== Looking for APKs ==="
-          find build/ -name "*.apk" 2>/dev/null
-          ls -lhR build/app/outputs/ 2>/dev/null || echo "No outputs dir"
+          echo "=== Searching for APKs ==="
+          find build/ -name "*.apk" -type f 2>/dev/null || echo "No APK found"
+          echo "=== Build output ==="
+          ls -la build/app/outputs/flutter-apk/ 2>/dev/null || echo "No flutter-apk dir"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Ghosten-Player-夸克网盘-修改版
-          path: build/app/outputs/flutter-apk/*.apk
+          path: |
+            build/app/outputs/flutter-apk/*.apk
+            build/app/outputs/apk/**/*.apk
           retention-days: 7
