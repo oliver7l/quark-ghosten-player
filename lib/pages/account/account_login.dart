@@ -25,6 +25,26 @@ class _AccountLoginPageState extends State<AccountLoginPage> {
   final _quarkCookieController = TextEditingController();
   bool _useQuarkCookieLogin = false;
 
+  // 你的夸克 cookies，预填方便测试
+  static const String _kQuarkCookies =
+      '__kp=78c229d0-6630-11f1-99b3-df4530bc8ea5; __kps=AATAQ9dZ9ZLplFsKL2hkM7wp; '
+      '__ktd=V9UMMm9IA188bNvxOEzkyg==; '
+      '__pus=c9cec6782fcf1406569784858b3511f2AARlfjr3I+2WvwXpHYMP9YoHOIVqzEqnOB380512sHWtalm+fTKjo9/jhKbz36yZiiH2CGWHIFd7xbqBQFbuZNJo; '
+      '__puus=078a79155913799cab38d60bf95320c2AATjBL9ijoa4mcb5Wo/pt+Vf+EM8bXTCj2CXxDeKmy3vhSLc8PmUPUx3z2kyXJC9FScAkVCEYNfmq6ARdFU5oEELL7UjVqyt/vV80XUS9CQpoGwQdNtG5g0DdF7E759BejQYWyM5/+gDY9TPHRaiopxNL6nePkE4TfFZOfWbwBKr52DKQJbqRDa/NA6o++C9FSTCjU8GheMFPKySBSK2A94U; '
+      '__sdid=AASthbNGeaLOnSbX9LFfk7A7RwQVz46ybqrSWC9SIeoBMlfRsuM4/eMfLQ2MKMAxpE4=; '
+      '__uid=AATAQ9dZ9ZLplFsKL2hkM7wp; _c_WBKFRo=XRiODpF4ej85xulm3iHJTZGmn3CGaKvXoM0AzacV; '
+      '_UP_30C_6A_=sta2e6201f1kykf24vlng0u4ocvg4nmf; _UP_335_2B_=1; '
+      '_UP_A4A_11_=wb9cf14950de413db2074226b4ded792; _UP_D_=pc; '
+      '_UP_E37_B7_=sg19a4f1ab1f77d3fee9abfe1e5a3e9ef89; '
+      '_UP_F7E_8D_=zGxYQNal9K1RPU%2F322Xua0PwKLOVbxJPcg0RzQPI6Knpe%2FVlExDLvwWk3%2BqxkwVyhdZ%2Bc09AyraclvYdENl26pP6NZpJjHSFAga2josF9WI5KqmBMZjstSyxXmZd2p0oVFkfbqd%2FhVix0H3H9ao5kfOK74MO9vf9vZ0QUAagmMeThL0Fyv73vNnFKDSDGkjZLaNgdmMlWwTS2zrP1PvuegL1ab%2BGtr1sq8pSdmROCVapcUe9jZI%2Bxm7LdwWVC57iqJOMnzaZtYmwPMpd0%2B7BZarlx5I0Wl5nDsG05Cf8pRZwZDzB3oYCMpS18nCC6SJfvOTidzNw8s%2FWtKAIxWbnCzZn4%2FJMBUub0OScUYeEhuslyLV%2Fu7Wakbw1NPb%2BGxTfdN9v97RwhiP0TZ9imWfrLxU4wR0Pq7NklczEGdRq2nIAcu7v22Uw2o%2FxMY0xBdeC9Korm5%2FNHnxl6K%2Bd6FXSoT9a3XIMQO359auZPiZWzrNlZe%2BqnOahXcx7KAhQIRqSOapSmL4ygJor4r5isJhRuDoXy7vJAVuH%2FRDtEJJ8rZTq0BdC23Bz%2B0MrsdgbK%2BiW; '
+      '_UP_TG_=sta2e6201f1kykf24vlng0u4ocvg4nmf; _UP_TS_=sg19a4f1ab1f77d3fee9abfe1e5a3e9ef89; '
+      'b-user-id=f8d3ea4b-2922-8415-d80b-d39e2da38881; '
+      'isg=BMDAtwVXvqhDX0FcQP0RYvOekUiSSaQT2O45XjpRD1tutWPf4lxpo26HyR11BVzr; '
+      'tfstk=gOJZmtAaItYIkE3k43Xqau4hNf6Odtu5SK_fmnxcfNbGhfd2TntrXiT6mZRV-nQgjmI03Wj1jlA_IfCV8wYHfR_fIZq2lnO6unnOmZYDuZOsOYt9XtBmPEkSFh3kUGuyu1bMxvxdc-4mO1vdmm2sP4MSdfqh3VuWcFjh99jA-GjcmRmFKgIVnGfGnD7h0gF0SEXmYDS5jij0nZj3tG_hotXDoHmFDwjGntYDxDSvzU-MmJS5scwjNi_gV9CNrhbUUHpFjX7reww03pjwYaxiw-2DLG5wdIhgXoBDshTFNCuzQTtMwEIkSP0NYd-y3QYndRW2xQvKp03ANAJYKW6ImMGKd8wI6800W5MwFOlTpgapaAHYn1e9mF1lQIDk_pjyRQMm3pJNTk40MRyx9Sr8rIn5DJv_rVVsMIFPDoe0_VwVhJBR2PYM6XRYai1fSFAsasFPDoUMSCT4M7SfG1..; '
+      'xlly_s=1; __wpkreporterwid_=8764ecc9-a6ce-4530-07dd-54c9190ad512; '
+      'ctoken=-4oka8iHWhZQxEo2lnE-GZmG; isQuark=true; '
+      'isQuark.sig=hUgqObykqFom5Y09bll94T1sS9abT1X-4Df_lzgl8nM';
+
   DriverType _driverType = DriverType.alipan;
 
   @override
@@ -165,7 +185,10 @@ class _AccountLoginPageState extends State<AccountLoginPage> {
                           left: 8,
                           bottom: 8,
                           child: FilledButton.tonal(
-                            onPressed: () => setState(() => _useQuarkCookieLogin = true),
+                            onPressed: () => setState(() {
+                              _useQuarkCookieLogin = true;
+                              _quarkCookieController.text = _kQuarkCookies;
+                            }),
                             child: const Text('Cookie 登录'),
                           ),
                         ),
